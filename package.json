@@ -1,0 +1,11 @@
+{
+  "name": "fmif_programming_technologies",
+  "version": "1.0.0",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "docker:build": "docker build -t fmif_programming_technologies:dev .",
+    "docker:run": "docker run --rm -p 3000:3000 fmif_programming_technologies:dev"
+  }
+}
