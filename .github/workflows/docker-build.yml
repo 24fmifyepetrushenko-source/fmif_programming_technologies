@@ -1,0 +1,37 @@
+name: Build Docker image (artifact)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      actions: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        run: |
+          docker build -t fmif_programming_technologies:${{ github.sha }} -t fmif_programming_technologies:latest .
+
+      - name: Save image as tarball
+        run: |
+          mkdir -p dist
+          docker save fmif_programming_technologies:${{ github.sha }} | gzip > dist/fmif_programming_technologies-image-${{ github.sha }}.tar.gz
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmif_programming_technologies-image-${{ github.sha }}
+          path: dist/fmif_programming_technologies-image-${{ github.sha }}.tar.gz
+          if-no-files-found: error
+          retention-days: 7
